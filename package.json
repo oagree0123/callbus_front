@@ -6,8 +6,9 @@
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.1.1",
     "@testing-library/user-event": "^13.5.0",
-    "axios": "^0.27.0",
+    "axios": "^0.26.0",
     "connected-react-router": "^6.9.2",
+    "dayjs": "^1.11.1",
     "history": "^4.10.1",
     "immer": "^9.0.12",
     "json-server": "^0.17.0",
@@ -15,7 +16,7 @@
     "react-dom": "^17.0.2",
     "react-redux": "^7.2.6",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "5.0.1",
+    "react-scripts": "^5.0.0",
     "redux": "^4.1.2",
     "redux-actions": "^2.6.5",
     "redux-logger": "^3.0.6",
@@ -28,7 +29,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "serve": "json-server --watch ./src/db/mock.json --port 3001"
+    "server": "json-server --watch ./src/db/mock.json --port 3001"
   },
   "eslintConfig": {
     "extends": [
