@@ -1,3 +1,4 @@
+import url from 'sockjs-client/lib/utils/url';
 import styled from 'styled-components';
 
 export const PostCardWrap = styled.section`
@@ -66,7 +67,8 @@ export const PostCardImg = styled.div`
   height: 160px;
   border-radius: 4px;
   overflow: hidden;
-  background-image: url('https://static.zaritalk.com/images/img-default-thumbnail@2x.png');
+  background-image: ${(props) =>
+    props.img_url ? `url(${props.img_url})` : ''};
   background-repeat: no-repeat;
   background-position: center center;
   background-size: cover;
@@ -79,8 +81,6 @@ export const PostCardFooter = styled.footer`
 
 export const CountWrap = styled.div`
   margin-right: 16px;
-  width: 41px;
-  height: 16px;
   display: flex;
   align-items: center;
 `;

@@ -12,7 +12,7 @@ function App() {
       <GlobalStyle />
       <ConnectedRouter history={history}>
         <Switch>
-          <Route paht="/" exact component={Home} />
+          <Route path="/community/list" exact component={Home} />
         </Switch>
       </ConnectedRouter>
     </AppWrap>
