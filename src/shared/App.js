@@ -4,7 +4,7 @@ import GlobalStyle from './GlobalStyles';
 import { ConnectedRouter } from 'connected-react-router';
 import { Route, Switch } from 'react-router-dom';
 import { history } from '../redux/configStore';
-import { Home } from '../pages';
+import { Home, PostDetail } from '../pages';
 
 function App() {
   return (
@@ -13,6 +13,7 @@ function App() {
       <ConnectedRouter history={history}>
         <Switch>
           <Route path="/community/list" exact component={Home} />
+          <Route path="/community/post/:post_pk" exact component={PostDetail} />
         </Switch>
       </ConnectedRouter>
     </AppWrap>

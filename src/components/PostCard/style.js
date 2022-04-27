@@ -1,4 +1,3 @@
-import url from 'sockjs-client/lib/utils/url';
 import styled from 'styled-components';
 
 export const PostCardWrap = styled.section`

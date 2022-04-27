@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import dayjs from 'dayjs';
+import { history } from '../../redux/configStore';
 
 import ViewIcon from '../../assets/Image/ViewIcon.svg';
 import LikeIcon from '../../assets/Image/LikeIcon.svg';
@@ -44,7 +45,11 @@ const PostCard = (props) => {
   }, []);
 
   return (
-    <PostCardWrap>
+    <PostCardWrap
+      onClick={(e) => {
+        history.push(`/community/post/${props.pk}`);
+      }}
+    >
       <PostCardHeader>
         <Avatar user_profile={props.writerProfileUrl} />
         <HeaderRight>
@@ -57,7 +62,12 @@ const PostCard = (props) => {
       <PostCardMain>
         <PostCardTitle>{props.title}</PostCardTitle>
         <PostCardCont>{props.content}</PostCardCont>
-        {props.imageUrl ? <PostCardImg img_url={props.imageUrl} /> : ''}
+        {props.imageUrl &&
+          (!Array.isArray(props.imageUrl) ? (
+            <PostCardImg img_url={props.imageUrl} />
+          ) : (
+            <PostCardImg img_url={props.imageUrl[0]} />
+          ))}
       </PostCardMain>
       <PostCardFooter>
         <CountWrap>
