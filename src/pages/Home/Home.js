@@ -5,7 +5,7 @@ import { history } from '../../redux/configStore';
 import { actionCreators as postActions } from '../../redux/modules/post';
 
 import FingerWrite from '../../assets/Image/FingerWrite.png';
-import { PostCardList } from '../../components';
+import { CategorySlider, PostCardList } from '../../components';
 import {
   ButtonImg,
   ButtonText,
@@ -24,6 +24,7 @@ const Home = () => {
   return (
     <HomeWrap>
       <HomeTitle>커뮤니티</HomeTitle>
+      <CategorySlider />
       <PostCardList />
       <WriteButton
         onClick={() => {

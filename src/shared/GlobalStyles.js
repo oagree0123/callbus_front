@@ -8,7 +8,7 @@ const GlobalStyles = createGlobalStyle`
   * {
     margin: 0;
     padding: 0;
-    font-family: 'Noto Sans CJK KR';
+    font-family: 'Noto Sans KR', sans-serif;
     letter-spacing: 0;
     box-sizing: border-box;
   }
