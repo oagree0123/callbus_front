@@ -1,5 +1,5 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import dayjs from 'dayjs';
 
 import DetailLike from '../../assets/Image/DetailLike.svg';
 import DetailComment from '../../assets/Image/DetailComment.svg';
@@ -23,13 +23,17 @@ import {
 } from './style';
 
 const PostCardDetail = (props) => {
+  const post_date = dayjs(props.writtenAt).format('YY-MM-DD');
+
   return (
     <CardDetailWrap>
       <CardDetailHeader>
         <Avatar user_profile={props.writerProfileUrl} />
         <HeaderRight>
           <UserName>{props.writerNickName}</UserName>
-          <CardDetailInfo>{props.categoryName} ·</CardDetailInfo>
+          <CardDetailInfo>
+            {props.categoryName} · {post_date}
+          </CardDetailInfo>
         </HeaderRight>
       </CardDetailHeader>
       <CardDetailMain>
@@ -41,7 +45,7 @@ const PostCardDetail = (props) => {
               <CardDetailImg src={props.imageUrl} alt="detail_image" />
             ) : (
               props.imageUrl.map((u, i) => {
-                return <CardDetailImg src={u} alt="detail_image" />;
+                return <CardDetailImg src={u} alt="detail_image" key={i} />;
               })
             ))}
         </DetailImgWrap>

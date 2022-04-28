@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const PostCardWrap = styled.section`
+export const PostCardWrap = styled.div`
   padding: 26px;
 `;
 
