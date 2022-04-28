@@ -52,9 +52,13 @@ export const WriteButton = styled.button`
   font-weight: 700;
   line-height: 24px;
   color: #fff;
-  background-color: #2c7fff;
+  background-color: ${(props) => (props.active_write ? '#2c7fff' : '#e8e8e8')};
   border: none;
   border-radius: 8px;
+
+  &:disabled {
+    cursor: default;
+  }
 `;
 
 export const SelectWrap = styled.div`
@@ -107,6 +111,7 @@ export const TitleInput = styled.input`
 `;
 
 export const ContTextarea = styled.textarea`
+  margin-bottom: 39px;
   padding: 10px 20px;
   width: 360px;
   height: 179px;
@@ -114,8 +119,80 @@ export const ContTextarea = styled.textarea`
   font-weight: 500;
   line-height: 24px;
   border: none;
+  resize: none;
 
   &::placeholder {
     color: #b4b4b4;
   }
+`;
+
+export const ImageUploadWrap = styled.div`
+  padding-left: 20px;
+  width: 360px;
+  overflow: hidden;
+`;
+
+export const ImageSlider = styled.div`
+  margin-bottom: 16px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  overflow-x: scroll;
+  cursor: grab;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
+export const ImageBox = styled.div`
+  position: relative;
+  margin-right: 16px;
+  width: 89px;
+  height: 83px;
+  background-color: #e8e8e8;
+  border-radius: 4px;
+`;
+
+export const UploadImg = styled.img`
+  width: 89px;
+  height: 83px;
+  object-fit: cover;
+`;
+
+export const UploadCloseBtn = styled.button`
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 24px;
+  height: 24px;
+  background-image: ${(props) => `url(${props.bg})`};
+  background-position: center center;
+  border: none;
+`;
+
+export const UploadButton = styled.label`
+  width: 86px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #dbe9ff;
+  border-radius: 6px;
+  cursor: pointer;
+`;
+
+export const UploadInput = styled.input`
+  display: none;
+`;
+
+export const UploadBtnIcon = styled.img`
+  margin-right: 4px;
+`;
+
+export const UploadBtnText = styled.p`
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 12px;
+  color: #2c7fff;
 `;

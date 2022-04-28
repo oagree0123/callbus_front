@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 export const PostCardWrap = styled.div`
   padding: 26px;
+  border-bottom: 6px solid #e8e8e8;
 `;
 
 export const PostCardHeader = styled.header`

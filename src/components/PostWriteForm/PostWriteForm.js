@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { history } from '../../redux/configStore';
 import { useDispatch } from 'react-redux';
 import { actionCreators as postActions } from '../../redux/modules/post';
 
 import Arrow from '../../assets/Image/Arrow.svg';
 import SelectArrow from '../../assets/Image/SelectArrow.svg';
+import UploadIcon from '../../assets/Image/UploadIcon.svg';
+import CloseIcon from '../../assets/Image/CloseIcon.svg';
 import {
   ButtonImg,
   HeaderButton,
@@ -19,16 +21,62 @@ import {
   TitleInput,
   WriteWrap,
   WriteFrom,
+  ImageUploadWrap,
+  ImageSlider,
+  ImageBox,
+  UploadButton,
+  UploadBtnIcon,
+  UploadBtnText,
+  UploadInput,
+  UploadImg,
+  UploadCloseBtn,
 } from './style';
+import { useEffect } from 'react';
 
 const PostWriteForm = () => {
   const dispatch = useDispatch();
   const select_list = ['대선청원', '자유글', '질문/답변', '뉴스', '노하우'];
 
+  const scrollRef = useRef(null);
+
+  const [isDrag, setIsDrag] = useState(false);
+  const [startX, setStartX] = useState(0);
+
   const [select_key, setSelectKey] = useState(1);
   const [select_value, setSelectValue] = useState('질문/답변');
+
   const [title, setTitle] = useState('');
+  const [check_title, setCheckTitle] = useState(false);
   const [contText, setContText] = useState('');
+  const [check_ContText, setCheckContText] = useState(false);
+
+  const [imgs_url, setImgsUrl] = useState([]);
+
+  const [active_write, setActiveWrite] = useState(false);
+
+  const onDragStart = (e) => {
+    e.preventDefault();
+    setIsDrag(true);
+    setStartX(e.pageX + scrollRef.current.scrollLeft);
+  };
+
+  const onDragEnd = () => {
+    setIsDrag(false);
+  };
+
+  const onDragMove = (e) => {
+    if (isDrag) {
+      const { scrollWidth, clientWidth, scrollLeft } = scrollRef.current;
+
+      scrollRef.current.scrollLeft = startX - e.pageX;
+
+      if (scrollLeft === 0) {
+        setStartX(e.pageX);
+      } else if (scrollWidth <= clientWidth + scrollLeft) {
+        setStartX(e.pageX + scrollLeft);
+      }
+    }
+  };
 
   const changeSelect = (e) => {
     let category_key = select_list.findIndex((l) => {
@@ -41,14 +89,42 @@ const PostWriteForm = () => {
 
   const changeTitle = (e) => {
     setTitle(e.target.value);
+
+    console.log(e.target.value !== '');
+
+    if (e.target.value !== '') {
+      setCheckTitle(true);
+    } else {
+      setCheckTitle(false);
+    }
   };
 
   const changeContText = (e) => {
     setContText(e.target.value);
+
+    console.log(e.target.value !== '');
+
+    if (e.target.value !== '') {
+      setCheckContText(true);
+    } else {
+      setCheckContText(false);
+    }
+  };
+
+  const closeImage = (img_file) => {
+    let _imgs_url = imgs_url.filter((u) => {
+      return u !== img_file;
+    });
+
+    setImgsUrl([..._imgs_url]);
   };
 
   const submitHandler = (e) => {
     e.preventDefault();
+    if (!active_write) {
+      window.alert('제목과 내용을 모두 입력해야합니다');
+      return;
+    }
     let now_date = new Date().toISOString();
 
     dispatch(
@@ -58,9 +134,18 @@ const PostWriteForm = () => {
         title,
         contText,
         now_date,
+        imgs_url,
       ),
     );
   };
+
+  useEffect(() => {
+    if (check_title && check_ContText) {
+      setActiveWrite(true);
+    } else {
+      setActiveWrite(false);
+    }
+  }, [check_title, check_ContText]);
 
   return (
     <PostWriteFormWrap>
@@ -74,7 +159,13 @@ const PostWriteForm = () => {
             <ButtonImg src={Arrow} alt="back_to_list" />
           </HeaderButton>
           <PostWriteTitle>글쓰기</PostWriteTitle>
-          <WriteButton type="submit">완료</WriteButton>
+          <WriteButton
+            type="submit"
+            disabled={!active_write}
+            active_write={active_write}
+          >
+            완료
+          </WriteButton>
         </PostWriteHeader>
         <SelectWrap>
           <CategorySelect
@@ -103,6 +194,52 @@ const PostWriteForm = () => {
             onChange={changeContText}
           />
         </WriteWrap>
+        <ImageUploadWrap>
+          <ImageSlider
+            ref={scrollRef}
+            onMouseDown={onDragStart}
+            onMouseMove={onDragMove}
+            onMouseUp={onDragEnd}
+            onMouseLeave={onDragEnd}
+          >
+            {imgs_url.length === 0 ? (
+              <ImageBox />
+            ) : (
+              imgs_url.map((m, i) => {
+                const img_url = URL.createObjectURL(m);
+                return (
+                  <ImageBox key={i}>
+                    <UploadImg src={img_url} alt="upload_image" />
+                    <UploadCloseBtn
+                      type="button"
+                      bg={CloseIcon}
+                      onClick={() => {
+                        closeImage(m);
+                      }}
+                    />
+                  </ImageBox>
+                );
+              })
+            )}
+          </ImageSlider>
+          <UploadButton>
+            <UploadInput
+              type="file"
+              multiple="multiple"
+              accept="image/*"
+              onChange={(e) => {
+                if (imgs_url.length + e.target.files.length > 6) {
+                  window.alert('이미지는 6개 까지만 업로드 가능합니다.');
+                  return;
+                }
+
+                setImgsUrl([...imgs_url, ...e.target.files]);
+              }}
+            />
+            <UploadBtnIcon src={UploadIcon} alert="upload_icon" />
+            <UploadBtnText>사진({imgs_url.length}/6)</UploadBtnText>
+          </UploadButton>
+        </ImageUploadWrap>
       </WriteFrom>
     </PostWriteFormWrap>
   );

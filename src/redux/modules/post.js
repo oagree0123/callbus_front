@@ -123,8 +123,20 @@ const getPostOneDB = (post_pk) => {
   };
 };
 
-const addPostDB = (category_key, category_name, title, content, now_date) => {
+const addPostDB = (
+  category_key,
+  category_name,
+  title,
+  content,
+  now_date,
+  imgs_url,
+) => {
   return async function (dispatch, getState, { history }) {
+    let _imgs_url = [];
+    imgs_url.map((u) => {
+      _imgs_url.push(URL.createObjectURL(u));
+    });
+
     try {
       const response = await axios.post(`http://localhost:3001/posts`, {
         categoryPk: category_key,
@@ -134,7 +146,7 @@ const addPostDB = (category_key, category_name, title, content, now_date) => {
         viewCount: 0,
         likeCount: 0,
         commentCount: 0,
-        imageUrl: null,
+        imageUrl: _imgs_url,
         writtenAt: now_date,
         writerNickName: '테스트유저',
         writerProfileUrl:
@@ -154,7 +166,6 @@ export default handleActions(
   {
     [GET_POSTS]: (state, action) =>
       produce(state, (draft) => {
-        draft.list = [];
         draft.list.push(...action.payload.post_list);
 
         let _new_list = draft.list.reduce((acc, cur) => {
