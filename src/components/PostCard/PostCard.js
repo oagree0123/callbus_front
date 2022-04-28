@@ -25,7 +25,7 @@ import {
 
 const PostCard = (props) => {
   const now_date = dayjs();
-  const written_date = dayjs(props.writtenAt.split('T').join(' '));
+  const written_date = dayjs(props.writtenAt);
   const diff_date = now_date.diff(written_date, 's');
 
   const [post_date, setPostDate] = useState('');

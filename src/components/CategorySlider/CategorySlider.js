@@ -1,7 +1,10 @@
 import React, { useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { CategoryItem, CategoryList, SliderWrap } from './style';
+import { actionCreators as postActions } from '../../redux/modules/post';
 
 const CategorySlider = () => {
+  const dispatch = useDispatch();
   const category_data = [
     '전체',
     '인기글',
@@ -50,10 +53,15 @@ const CategorySlider = () => {
     }
   };
 
-  const clickedItem = (idx) => {
+  const clickedItem = (idx, category) => {
     const new_arr = Array(category_data.length).fill(false);
     new_arr[idx] = true;
     setIsClicked(new_arr);
+    if (category === '전체') {
+      dispatch(postActions.getPostsDB());
+    } else {
+      dispatch(postActions.getCategoryPostsDB(category));
+    }
   };
 
   return (
@@ -70,7 +78,7 @@ const CategorySlider = () => {
             <CategoryItem
               key={i}
               onClick={() => {
-                clickedItem(i);
+                clickedItem(i, c);
               }}
               isClicked={is_clicked[i]}
             >

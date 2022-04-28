@@ -4,12 +4,20 @@ import axios from 'axios';
 
 // actions
 const GET_POSTS = 'GET_POSTS';
+const GET_CATEGORY_POSTS = 'GET_CATEGORY_POSTS';
 const GET_POST_ONE = 'GET_POST_ONE';
 const ADD_POST = 'ADD_POST';
 const INIT_POST_ONE = 'INIT_POST_ONE';
 
 // action creators
 const getPosts = createAction(GET_POSTS, (post_list) => ({ post_list }));
+const getCategoryPosts = createAction(
+  GET_CATEGORY_POSTS,
+  (post_list, category) => ({
+    post_list,
+    category,
+  }),
+);
 const getPostOne = createAction(GET_POST_ONE, (post_data) => ({ post_data }));
 const addPost = createAction(ADD_POST, (post_data) => ({ post_data }));
 const initPostOne = createAction(INIT_POST_ONE, () => ({}));
@@ -29,6 +37,20 @@ const getPostsDB = () => {
       );
 
       dispatch(getPosts(response.data));
+    } catch (err) {
+      console.log(err);
+    }
+  };
+};
+
+const getCategoryPostsDB = (category) => {
+  return async function (dispatch, getState, { history }) {
+    try {
+      const response = await axios.get(
+        `http://localhost:3001/posts?_sort=writtenAt&_order=desc`,
+      );
+
+      dispatch(getCategoryPosts(response.data, category));
     } catch (err) {
       console.log(err);
     }
@@ -80,6 +102,7 @@ export default handleActions(
   {
     [GET_POSTS]: (state, action) =>
       produce(state, (draft) => {
+        draft.list = [];
         draft.list.push(...action.payload.post_list);
 
         let _new_list = draft.list.reduce((acc, cur) => {
@@ -92,6 +115,23 @@ export default handleActions(
         }, []);
 
         draft.list = _new_list;
+      }),
+    [GET_CATEGORY_POSTS]: (state, action) =>
+      produce(state, (draft) => {
+        draft.list = [];
+        if (action.payload.category === '인기글') {
+          action.payload.post_list.map((p, i) => {
+            if (p.viewCount >= 100) {
+              draft.list.push(p);
+            }
+          });
+        } else {
+          action.payload.post_list.map((p, i) => {
+            if (p.categoryName === action.payload.category) {
+              draft.list.push(p);
+            }
+          });
+        }
       }),
     [GET_POST_ONE]: (state, action) =>
       produce(state, (draft) => {
@@ -112,6 +152,7 @@ export default handleActions(
 // action creator export
 const actionCreators = {
   getPostsDB,
+  getCategoryPostsDB,
   getPostOneDB,
   addPostDB,
   initPostOne,
