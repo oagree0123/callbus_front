@@ -14,7 +14,7 @@ export const HomeTitle = styled.h1`
 
 export const WriteButton = styled.button`
   position: fixed;
-  right: 16px;
+  right: calc(50vw - 164px);
   bottom: 16px;
   width: 100px;
   height: 52px;
