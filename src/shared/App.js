@@ -5,6 +5,7 @@ import { ConnectedRouter } from 'connected-react-router';
 import { Route, Switch } from 'react-router-dom';
 import { history } from '../redux/configStore';
 import { Home, PostDetail, PostWrite } from '../pages';
+import { useEffect } from 'react';
 
 function App() {
   return (

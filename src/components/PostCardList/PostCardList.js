@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import PostCard from '../PostCard/PostCard';
 import { PostCardListWrap } from './style';
 
-const PostCardList = () => {
+const PostCardList = (props) => {
   const post_list = useSelector((state) => state.post.list);
 
   return (

@@ -166,6 +166,7 @@ export default handleActions(
   {
     [GET_POSTS]: (state, action) =>
       produce(state, (draft) => {
+        draft.list = [];
         draft.list.push(...action.payload.post_list);
 
         let _new_list = draft.list.reduce((acc, cur) => {

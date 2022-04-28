@@ -51,6 +51,7 @@ const PostCard = (props) => {
   return (
     <PostCardWrap
       onClick={(e) => {
+        sessionStorage.setItem('scroll_Y', window.scrollY);
         history.push(`/community/post/${props.pk}`);
         dispatch(postActions.addViewCountDB(props.pk));
       }}
@@ -70,8 +71,10 @@ const PostCard = (props) => {
         {props.imageUrl &&
           (!Array.isArray(props.imageUrl) ? (
             <PostCardImg img_url={props.imageUrl} />
-          ) : (
+          ) : props.imageUrl.length !== 0 ? (
             <PostCardImg img_url={props.imageUrl[0]} />
+          ) : (
+            ''
           ))}
       </PostCardMain>
       <PostCardFooter>

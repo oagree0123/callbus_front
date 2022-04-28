@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { history } from '../../redux/configStore';
@@ -17,7 +17,12 @@ import {
 const Home = () => {
   const dispatch = useDispatch();
 
+  const saveScroll = () => {
+    sessionStorage.setItem('scroll_Y', window.scrollY);
+  };
+
   useEffect(() => {
+    window.scrollTo(0, sessionStorage.getItem('scroll_Y'));
     dispatch(postActions.getPostsDB());
   }, []);
 
@@ -25,9 +30,10 @@ const Home = () => {
     <HomeWrap>
       <HomeTitle>커뮤니티</HomeTitle>
       <CategorySlider />
-      <PostCardList />
+      <PostCardList saveScroll={saveScroll} />
       <WriteButton
         onClick={() => {
+          saveScroll();
           history.push('/community/post/new');
         }}
       >
