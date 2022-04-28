@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import dayjs from 'dayjs';
 import { history } from '../../redux/configStore';
+import { useDispatch } from 'react-redux';
+import { actionCreators as postActions } from '../../redux/modules/post';
 
 import ViewIcon from '../../assets/Image/ViewIcon.svg';
 import LikeIcon from '../../assets/Image/LikeIcon.svg';
@@ -24,6 +26,8 @@ import {
 } from './style';
 
 const PostCard = (props) => {
+  const dispatch = useDispatch();
+
   const now_date = dayjs();
   const written_date = dayjs(props.writtenAt);
   const diff_date = now_date.diff(written_date, 's');
@@ -48,6 +52,7 @@ const PostCard = (props) => {
     <PostCardWrap
       onClick={(e) => {
         history.push(`/community/post/${props.pk}`);
+        dispatch(postActions.addViewCountDB(props.pk));
       }}
     >
       <PostCardHeader>

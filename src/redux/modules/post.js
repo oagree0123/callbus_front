@@ -5,7 +5,9 @@ import axios from 'axios';
 // actions
 const GET_POSTS = 'GET_POSTS';
 const GET_CATEGORY_POSTS = 'GET_CATEGORY_POSTS';
+const ADD_VIEW_COUNT = 'ADD_VIEW_COUNT';
 const GET_POST_ONE = 'GET_POST_ONE';
+const LIKE_POST = 'LIKE_POST';
 const ADD_POST = 'ADD_POST';
 const INIT_POST_ONE = 'INIT_POST_ONE';
 
@@ -18,6 +20,13 @@ const getCategoryPosts = createAction(
     category,
   }),
 );
+const addViewCount = createAction(ADD_VIEW_COUNT, (post_idx) => ({
+  post_idx,
+}));
+const likePost = createAction(LIKE_POST, (post_pk, type) => ({
+  post_pk,
+  type,
+}));
 const getPostOne = createAction(GET_POST_ONE, (post_data) => ({ post_data }));
 const addPost = createAction(ADD_POST, (post_data) => ({ post_data }));
 const initPostOne = createAction(INIT_POST_ONE, () => ({}));
@@ -26,6 +35,7 @@ const initPostOne = createAction(INIT_POST_ONE, () => ({}));
 const initialState = {
   list: [],
   post_one: {},
+  liked_list: [],
 };
 
 // middleware
@@ -51,6 +61,48 @@ const getCategoryPostsDB = (category) => {
       );
 
       dispatch(getCategoryPosts(response.data, category));
+    } catch (err) {
+      console.log(err);
+    }
+  };
+};
+
+const addViewCountDB = (post_pk) => {
+  return async function (dispatch, getState, { history }) {
+    try {
+      let _post_list = getState().post.list;
+
+      const post_idx = _post_list.findIndex((p) => {
+        return p.pk === post_pk;
+      });
+
+      await axios.patch(`http://localhost:3001/posts/${post_pk}`, {
+        viewCount: _post_list[post_idx].viewCount + 1,
+      });
+
+      dispatch(addViewCount(post_idx));
+    } catch (err) {
+      console.log(err);
+    }
+  };
+};
+
+const likePostDB = (post_pk, type) => {
+  return async function (dispatch, getState, { history }) {
+    try {
+      let _post_one = getState().post.post_one;
+
+      if (type === 'like') {
+        await axios.patch(`http://localhost:3001/posts/${post_pk}`, {
+          likeCount: _post_one.likeCount + 1,
+        });
+      } else if (type === 'unlike') {
+        await axios.patch(`http://localhost:3001/posts/${post_pk}`, {
+          likeCount: _post_one.likeCount - 1,
+        });
+      }
+
+      dispatch(likePost(post_pk, type));
     } catch (err) {
       console.log(err);
     }
@@ -133,6 +185,23 @@ export default handleActions(
           });
         }
       }),
+    [ADD_VIEW_COUNT]: (state, action) =>
+      produce(state, (draft) => {
+        draft.list[action.payload.post_idx].viewCount += 1;
+      }),
+    [LIKE_POST]: (state, action) =>
+      produce(state, (draft) => {
+        if (action.payload.type === 'like') {
+          draft.liked_list.push(action.payload.post_pk);
+          draft.post_one.likeCount += 1;
+        } else if (action.payload.type === 'unlike') {
+          let _liked_list = draft.liked_list.filter((l) => {
+            return l !== action.payload.post_pk;
+          });
+          draft.liked_list = _liked_list;
+          draft.post_one.likeCount -= 1;
+        }
+      }),
     [GET_POST_ONE]: (state, action) =>
       produce(state, (draft) => {
         draft.post_one = { ...action.payload.post_data };
@@ -153,7 +222,9 @@ export default handleActions(
 const actionCreators = {
   getPostsDB,
   getCategoryPostsDB,
+  addViewCountDB,
   getPostOneDB,
+  likePostDB,
   addPostDB,
   initPostOne,
 };

@@ -29,7 +29,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "server": "json-server --id pk --watch ./src/db/mock.json --port 3001"
+    "server": "json-server --watch ./src/db/mock.json --id pk --port 3001"
   },
   "eslintConfig": {
     "extends": [

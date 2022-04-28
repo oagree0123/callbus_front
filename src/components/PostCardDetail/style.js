@@ -71,8 +71,9 @@ export const CountWrap = styled.div`
   padding: 9px;
   display: flex;
   align-items: center;
-  background-color: #f8f8f8;
+  background-color: ${(props) => (props.isLiked ? '#2C7FFF' : '#f8f8f8')};
   border-radius: 6px;
+  cursor: ${(props) => (props.type === 'like' ? 'pointer' : '')};
 `;
 
 export const FooterIcon = styled.img`
@@ -83,5 +84,5 @@ export const FooterCount = styled.p`
   font-size: 12px;
   font-weight: 500;
   line-height: 12px;
-  color: #7a7a7a;
+  color: ${(props) => (props.isLiked ? '#ffffff' : '#7a7a7a')};
 `;

@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import dayjs from 'dayjs';
+import { useDispatch, useSelector } from 'react-redux';
+import { actionCreators as postActions } from '../../redux/modules/post';
 
 import DetailLike from '../../assets/Image/DetailLike.svg';
+import DetailUnlike from '../../assets/Image/DetailUnlike.svg';
 import DetailComment from '../../assets/Image/DetailComment.svg';
 
 import Avatar from '../Avatar/Avatar';
@@ -21,9 +24,26 @@ import {
   CountWrap,
   DetailImgWrap,
 } from './style';
+import { useEffect } from 'react';
 
 const PostCardDetail = (props) => {
-  const post_date = dayjs(props.writtenAt).format('YY-MM-DD');
+  const dispatch = useDispatch();
+  const liked_list = useSelector((state) => state.post.liked_list);
+
+  const [is_liked, setIsLiked] = useState(false);
+
+  const clickLike = () => {
+    setIsLiked(!is_liked);
+    if (is_liked) {
+      dispatch(postActions.likePostDB(props.pk, 'unlike'));
+    } else {
+      dispatch(postActions.likePostDB(props.pk, 'like'));
+    }
+  };
+
+  useEffect(() => {
+    setIsLiked(liked_list.includes(props.pk));
+  }, [props.pk]);
 
   return (
     <CardDetailWrap>
@@ -32,7 +52,7 @@ const PostCardDetail = (props) => {
         <HeaderRight>
           <UserName>{props.writerNickName}</UserName>
           <CardDetailInfo>
-            {props.categoryName} · {post_date}
+            {props.categoryName} · {dayjs(props.writtenAt).format('YY-MM-DD')}
           </CardDetailInfo>
         </HeaderRight>
       </CardDetailHeader>
@@ -51,9 +71,9 @@ const PostCardDetail = (props) => {
         </DetailImgWrap>
       </CardDetailMain>
       <CardDetailFooter>
-        <CountWrap>
-          <FooterIcon src={DetailLike} />
-          <FooterCount>{props.likeCount}</FooterCount>
+        <CountWrap type="like" isLiked={is_liked} onClick={clickLike}>
+          <FooterIcon src={!is_liked ? DetailLike : DetailUnlike} />
+          <FooterCount isLiked={is_liked}>{props.likeCount}</FooterCount>
         </CountWrap>
         <CountWrap>
           <FooterIcon src={DetailComment} />
