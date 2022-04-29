@@ -5,14 +5,16 @@
 ```
 npm i
 npm i json-server
-npm run serve
+npm run server
 npm start
 ```
 
 `npm i` : 프로젝트 설치  
 `npm i json-server` : json-server 설치  
-`npm run serve` : mock server 실행(json-server / port:3001)
+`npm run server` : mock server 실행(json-server / port:3001)
 `npm start` : 프로젝트 실행
+
+`route` : http://localhost:3000/community/list
 
 ## 폴더 구조
 
