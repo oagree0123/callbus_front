@@ -88,11 +88,13 @@ const PostWriteForm = () => {
   };
 
   const changeTitle = (e) => {
+    if (e.target.value.length > 100) {
+      window.alert('제목은 100글자 이하만 가능합니다.');
+      return;
+    }
     setTitle(e.target.value);
 
-    console.log(e.target.value !== '');
-
-    if (e.target.value !== '') {
+    if (e.target.value !== '' && e.target.value.length <= 100) {
       setCheckTitle(true);
     } else {
       setCheckTitle(false);
@@ -101,8 +103,6 @@ const PostWriteForm = () => {
 
   const changeContText = (e) => {
     setContText(e.target.value);
-
-    console.log(e.target.value !== '');
 
     if (e.target.value !== '') {
       setCheckContText(true);
